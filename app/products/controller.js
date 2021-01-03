@@ -134,4 +134,21 @@ async function update(req, res, next) {
     next(err);
   }
 }
-module.exports = { index, update, store };
+
+//destroy delete
+async function destroy(req, res, next) {
+  try {
+    let product = await Product.findOneAndDelete({ _id: req.params.id });
+
+    let currentImage = `${config.rootPath}/public/upload/${product.image_url}`;
+
+    if (fs.existsSync(currentImage)) {
+      fs.unlinkSync(currentImage);
+    }
+
+    return res.json(product);
+  } catch (err) {
+    next(err);
+  }
+}
+module.exports = { index, update, store, destroy };
