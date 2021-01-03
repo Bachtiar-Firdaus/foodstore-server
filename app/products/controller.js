@@ -53,7 +53,11 @@ async function store(req, res, next) {
 }
 async function index(req, res, next) {
   try {
-    let products = await Product.find();
+    let { limit = 10, skip = 0 } = req.query;
+    let products = await Product.find()
+      .limit(parseInt(limit)) // <---karna data string di rubah ke integer
+      .skip(parseInt(skip)); // <---karna data string di rubah ke integer
+
     return res.json(products);
   } catch (err) {
     next(err);
