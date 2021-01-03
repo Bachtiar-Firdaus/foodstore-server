@@ -51,4 +51,12 @@ async function store(req, res, next) {
     next(err);
   }
 }
-module.exports = { store };
+async function index(req, res, next) {
+  try {
+    let products = await Product.find();
+    return res.json(products);
+  } catch (err) {
+    next(err);
+  }
+}
+module.exports = { index, store };
