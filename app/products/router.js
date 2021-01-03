@@ -13,4 +13,10 @@ router.post(
   productController.store
 );
 
+//Update PUT
+router.put(
+  "/products/:id",
+  multer({ dest: os.tmpdir() }).single("image"),
+  productController.update
+);
 module.exports = router;
