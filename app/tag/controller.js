@@ -17,5 +17,24 @@ async function store(req, res, next) {
     next(error);
   }
 }
+async function update(req, res, next) {
+  try {
+    let payload = req.body;
+    let tag = await Tag.findOneAndUpdate({ _id: req.params.id }, payload, {
+      new: true,
+      runValidators: true,
+    });
+    return res.json(tag);
+  } catch (error) {
+    if (error && error.name === "ValidationError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+    next(error);
+  }
+}
 
-module.exports = { store };
+module.exports = { store, update };
