@@ -4,4 +4,5 @@ const categoryController = require("./controller");
 
 //add POST
 router.post("/categories", multer().none(), categoryController.store);
+router.put("/category/:id", multer().none(), categoryController.update);
 module.exports = router;
