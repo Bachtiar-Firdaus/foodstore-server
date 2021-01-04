@@ -1,5 +1,19 @@
 const Category = require("./model");
 
+//get GET
+async function index(req, res, next) {
+  try {
+    let { limit = 10, skip = 0 } = req.query;
+    let category = await Category.find()
+      .limit(parseInt(limit))
+      .skip(parseInt(skip));
+
+    return res.json(category);
+  } catch (err) {
+    next(err);
+  }
+}
+
 //add POST
 async function store(req, res, next) {
   try {
@@ -41,4 +55,12 @@ async function update(req, res, next) {
   }
 }
 
-module.exports = { store, update };
+//destory DELETE
+async function destory(req, res, next) {
+  try {
+    let deleted = await Category.findOneAndDelete({ _id: req.params.id });
+    return res.json(deleted);
+  } catch (error) {}
+  next(error);
+}
+module.exports = { store, update, destory, index };
