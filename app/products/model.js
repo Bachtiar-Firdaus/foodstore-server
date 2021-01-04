@@ -20,6 +20,12 @@ const productScema = Schema(
       default: 0,
     },
     image_url: String,
+
+    //relational collection
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
   },
   { Timestamp: true }
 );

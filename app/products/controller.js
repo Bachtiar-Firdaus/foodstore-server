@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const Product = require("./model");
+const Category = require("../categories/model");
 const config = require("../config");
 
 //add
@@ -9,6 +10,16 @@ async function store(req, res, next) {
   try {
     let payload = req.body;
 
+    if (payload.category) {
+      let category = await Category.findOne({
+        name: { $regex: payload.category, $options: "i" },
+      });
+      if (category) {
+        payload = { ...payload, category: category._id };
+      } else {
+        delete payload.category;
+      }
+    }
     if (req.file) {
       let tmp_path = req.file.path;
       let originalExt = req.file.originalname.split(".")[
