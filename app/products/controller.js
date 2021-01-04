@@ -3,6 +3,7 @@ const path = require("path");
 
 const Product = require("./model");
 const Category = require("../categories/model");
+const Tag = require("../tag/model");
 const config = require("../config");
 
 //add
@@ -10,6 +11,7 @@ async function store(req, res, next) {
   try {
     let payload = req.body;
 
+    //relational collection one to one
     if (payload.category) {
       let category = await Category.findOne({
         name: { $regex: payload.category, $options: "i" },
@@ -18,6 +20,13 @@ async function store(req, res, next) {
         payload = { ...payload, category: category._id };
       } else {
         delete payload.category;
+      }
+    }
+    //relational collection one to many
+    if (payload.tags && payload.tags.length) {
+      let tags = await Tag.find({ name: { $in: payload.tags } });
+      if (tags.length) {
+        payload = { ...payload, tags: tags.map((tag) => tag._id) };
       }
     }
     if (req.file) {
@@ -81,6 +90,7 @@ async function update(req, res, next) {
   try {
     let payload = req.body;
 
+    //relational collection one to one
     let category = await Category.findOne({
       name: { $regex: payload.category, $options: "i" },
     });

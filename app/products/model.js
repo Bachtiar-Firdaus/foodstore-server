@@ -21,11 +21,19 @@ const productScema = Schema(
     },
     image_url: String,
 
-    //relational collection
+    //relational collection one to one
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",
     },
+
+    //realtional collection one to many
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
   },
   { Timestamp: true }
 );
