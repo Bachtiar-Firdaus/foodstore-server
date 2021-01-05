@@ -75,11 +75,21 @@ async function store(req, res, next) {
 //get GET
 async function index(req, res, next) {
   try {
-    let { limit = 10, skip = 0, q = "" } = req.query;
+    let { limit = 10, skip = 0, q = "", category = "" } = req.query;
     //penambahan fitur filter GET data collection product
     let criteria = {};
     if (q.length) {
       criteria = { ...criteria, name: { $regex: `${q}`, $options: "i" } };
+    }
+    //penambahan fitur filter berdasarkan category product
+    if (category.length) {
+      category = await Category.findOne({
+        name: { $regex: `${category}`, $options: "i" },
+      });
+
+      if (category) {
+        criteria = { ...criteria, category: category._id };
+      }
     }
     let products = await Product.find(criteria)
       .limit(parseInt(limit)) // <---karna data string di rubah ke integer
