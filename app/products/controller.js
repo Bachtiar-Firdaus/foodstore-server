@@ -78,8 +78,9 @@ async function index(req, res, next) {
     let { limit = 10, skip = 0 } = req.query;
     let products = await Product.find()
       .limit(parseInt(limit)) // <---karna data string di rubah ke integer
-      .skip(parseInt(skip)); // <---karna data string di rubah ke integer
-
+      .skip(parseInt(skip)) // <---karna data string di rubah ke integer
+      .populate("category") // <---mendapatkan data collection dengan konsept one to one
+      .populate("tags"); // <---mendapatkan data collection dengan consept one to many
     return res.json(products);
   } catch (err) {
     next(err);
