@@ -75,7 +75,7 @@ async function store(req, res, next) {
 //get GET
 async function index(req, res, next) {
   try {
-    let { limit = 10, skip = 0, q = "", category = "" } = req.query;
+    let { limit = 10, skip = 0, q = "", category = "", tags = [] } = req.query;
     //penambahan fitur filter GET data collection product
     let criteria = {};
     if (q.length) {
@@ -90,6 +90,11 @@ async function index(req, res, next) {
       if (category) {
         criteria = { ...criteria, category: category._id };
       }
+    }
+    //penambahan fitur filter berdasarkan array tags
+    if (tags.length) {
+      tags = await Tag.find({ name: { $in: tags } });
+      criteria = { ...criteria, tags: { $in: tags.map((tag) => tag._id) } };
     }
     let products = await Product.find(criteria)
       .limit(parseInt(limit)) // <---karna data string di rubah ke integer
