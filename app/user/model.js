@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { model, Schema } = mongoose;
+const { model, Schema } = mongoose.set("useCreateIndex", true);
 const path = require("path");
 const bcrypt = require("bcrypt");
 const AutoIncrement = require("mongoose-sequence")(mongoose);

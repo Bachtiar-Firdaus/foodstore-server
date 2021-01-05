@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { model, Schema } = mongoose;
+const { model, Schema } = mongoose.set("useCreateIndex", true);
 
 let categorySchema = Schema({
   name: {

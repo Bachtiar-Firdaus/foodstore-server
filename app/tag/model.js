@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { model, Schema } = mongoose;
+const { model, Schema } = mongoose.set("useCreateIndex", true);
 
 const tagSchema = Schema({
   name: {

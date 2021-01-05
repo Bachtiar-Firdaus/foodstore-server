@@ -1,7 +1,7 @@
 const { Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
 
-const { model, Schema } = mongoose;
+const { model, Schema } = mongoose.set("useCreateIndex", true);
 
 const productScema = Schema(
   {
