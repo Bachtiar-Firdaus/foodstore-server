@@ -107,7 +107,7 @@ async function index(req, res, next) {
       criteria = { ...criteria, tags: { $in: tags.map((tag) => tag._id) } };
     }
 
-    let count = await Product.find(criteria).countDocumetns();
+    let count = await Product.find(criteria).countDocuments();
 
     let products = await Product.find(criteria)
       .limit(parseInt(limit)) // <---karna data string di rubah ke integer
