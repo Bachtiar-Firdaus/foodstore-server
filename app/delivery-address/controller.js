@@ -1,6 +1,7 @@
 const DeliveryAddress = require("./model");
 const { policyFor } = require("../policy");
 const { subject } = require("@casl/ability");
+const errorHandler = require("errorhandler");
 
 //Create POST
 async function store(req, res, next) {
@@ -60,4 +61,30 @@ async function update(req, res, next) {
     next(error);
   }
 }
-module.exports = { store, update };
+
+async function destroy(req, res, next) {
+  let policy = policyFor(req.user);
+  try {
+    let { id } = req.params;
+    let address = await DeliveryAddress.findOne({ _id: id });
+    let subjectAddress = subject({ ...address, user: address.user });
+    if (!policy.can("delete", subjectAddress)) {
+      return res.json({
+        error: 1,
+        message: `you're not allowed to delete this resource`,
+      });
+    }
+    await DeliveryAddress.findOneAndDelete({ _id: id });
+    return res.json(address);
+  } catch (error) {
+    if (error && error.name === "ValidasiError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+    next(error);
+  }
+}
+module.exports = { store, update, destroy };
