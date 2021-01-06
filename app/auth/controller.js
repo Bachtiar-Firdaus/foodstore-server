@@ -1,8 +1,10 @@
-const User = require("../user/model");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+
+const User = require("../user/model");
 const config = require("../config");
+const { getToken } = require("../utils/get-token");
 
 function me(req, res, next) {
   if (!req.user) {
@@ -67,4 +69,25 @@ async function login(req, res, next) {
   })(req, res, next);
 }
 
-module.exports = { register, localStrategy, login, me };
+async function logout(req, res, next) {
+  let token = getToken(req);
+  let user = await User.findOneAndUpdate(
+    { token: { $in: [token] } },
+    { $pull: { token } },
+    { useFindAndModify: false }
+  );
+
+  //cek user token
+  if (!user || !token) {
+    return res.json({
+      error: 1,
+      message: "No user found",
+    });
+  }
+  return res.json({
+    error: 0,
+    message: "Logout berhasil",
+  });
+}
+
+module.exports = { register, localStrategy, login, me, logout };
