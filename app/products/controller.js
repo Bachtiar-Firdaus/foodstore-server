@@ -106,12 +106,15 @@ async function index(req, res, next) {
       tags = await Tag.find({ name: { $in: tags } });
       criteria = { ...criteria, tags: { $in: tags.map((tag) => tag._id) } };
     }
+
+    let count = await Product.find(criteria).countDocumetns();
+
     let products = await Product.find(criteria)
       .limit(parseInt(limit)) // <---karna data string di rubah ke integer
       .skip(parseInt(skip)) // <---karna data string di rubah ke integer
       .populate("category") // <---mendapatkan data collection dengan konsept one to one
       .populate("tags"); // <---mendapatkan data collection dengan consept one to many
-    return res.json(products);
+    return res.json({ data: products, count });
   } catch (err) {
     next(err);
   }
