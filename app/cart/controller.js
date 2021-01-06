@@ -43,16 +43,37 @@ async function update(req, res, next) {
 
     return res.json(cartItems);
   } catch (error) {
-    if (err && err.name == "ValidationError") {
+    if (error && error.name == "ValidationError") {
       return res.json({
         error: 1,
-        message: err.message,
-        fields: err.errors,
+        message: error.message,
+        fields: error.errors,
       });
     }
 
-    next(err);
+    next(error);
   }
 }
 
-module.exports = { update };
+async function index(req, res, next) {
+  let policy = policyFor(req.user);
+  if (!policy.can("read", "Cart")) {
+    return res.json({
+      error: 1,
+      message: `You're not allowed to perform this action`,
+    });
+  }
+  try {
+    let items = await CartItem.find({ user: req.user._id }).populate("product");
+    return res.json(items);
+  } catch (error) {
+    if (error && error.name == "ValidationError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+  }
+}
+module.exports = { update, index };
