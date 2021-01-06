@@ -62,6 +62,7 @@ async function update(req, res, next) {
   }
 }
 
+//Delete
 async function destroy(req, res, next) {
   let policy = policyFor(req.user);
   try {
@@ -87,4 +88,35 @@ async function destroy(req, res, next) {
     next(error);
   }
 }
-module.exports = { store, update, destroy };
+
+//Get
+async function index(req, res, next) {
+  const policy = policyFor(req.user);
+  if (!policy.can("view", "DeliveryAddress")) {
+    return res.json({
+      error: 1,
+      message: `you're not allowed to perform this action`,
+    });
+  }
+  try {
+    let { limit = 10, skip = 0 } = req.query;
+    const count = await DeliveryAddress.find({
+      user: req.user._id,
+    }).countDocuments();
+    const DeliveryAddresses = await DeliveryAddress.find({ user: req.user._id })
+      .limit(parseInt(limit))
+      .skip(parseInt(skip))
+      .sort("-createdAt");
+    return res.json({ data: DeliveryAddresses, count: count });
+  } catch (error) {
+    if (error && error.name === "ValidasiError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+    next(error);
+  }
+}
+module.exports = { store, update, destroy, index };

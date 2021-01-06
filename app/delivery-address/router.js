@@ -9,5 +9,6 @@ router.put(
   addressController.update
 );
 router.delete("/delivery-addresses/:id", addressController.destroy);
+router.get("/delivery-addresses", addressController.index);
 
 module.exports = router;
