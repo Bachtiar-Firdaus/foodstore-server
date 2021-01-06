@@ -1,0 +1,12 @@
+guankan dari raw postment ubah bagian text menjadi json
+[
+    {
+        "_id": "5ff35a8c635d032dac870106",
+        "product": "5ff35a8c635d032dac870106",
+        "price": 5456,
+        "image_url": "0ec3280c142515d2b1dee61043e2ffff.png",
+        "name": "ayam goreng",
+        "user": "5ff48734628a2315ac193b1c",
+        "qty": 5
+    }
+]

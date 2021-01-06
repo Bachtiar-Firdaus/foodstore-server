@@ -15,7 +15,7 @@ async function update(req, res, next) {
     const productIds = items.map((itm) => itm._id);
     const products = await Product.find({ _id: { $in: productIds } });
 
-    let CartItems = items.map((item) => {
+    let cartItems = items.map((item) => {
       let relatedProduct = products.find(
         (product) => product._id.toString() === item._id
       );
@@ -40,7 +40,6 @@ async function update(req, res, next) {
         };
       })
     );
-
     return res.json(cartItems);
   } catch (error) {
     if (error && error.name == "ValidationError") {
@@ -50,7 +49,6 @@ async function update(req, res, next) {
         fields: error.errors,
       });
     }
-
     next(error);
   }
 }
