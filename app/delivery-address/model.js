@@ -36,7 +36,7 @@ const deliveryAddressSchema = Schema(
       maxlength: [255, "panjang maksimal detail 255 karakter"],
     },
     user: {
-      type: Schema.type.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
   },

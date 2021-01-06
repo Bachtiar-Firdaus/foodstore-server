@@ -1,6 +1,8 @@
 const DeliveryAddress = require("./model");
 const { policyFor } = require("../policy");
+const { subject } = require("@casl/ability");
 
+//Create POST
 async function store(req, res, next) {
   let policy = policyFor(req.user);
   if (!policy.can("create", "DeliveryAddress")) {
@@ -24,8 +26,38 @@ async function store(req, res, next) {
         fields: error.errors,
       });
     }
-    next();
+    next(error);
   }
 }
 
-module.exports = { store };
+//Update PUT
+async function update(req, res, next) {
+  let policy = policyFor(req.user);
+  try {
+    let { id } = req.params;
+    let { _id, ...payload } = req.body;
+    let address = await DeliveryAddress.findOne({ _id: id });
+    let subjectAddress = subject("DeliveryAddress", {
+      ...address,
+      user_id: address.user,
+    });
+    if (!policy.can("update", subjectAddress)) {
+      return res.json({
+        error: 1,
+        message: `You're not allowed to modify this resource`,
+      });
+    }
+    address = await DeliveryAddress.findOneAndUpdate({ _id: id }, payload, {
+      new: true,
+    });
+    return res.json(address);
+  } catch (error) {
+    return res.json({
+      error: 1,
+      message: error.message,
+      fields: error.errors,
+    });
+    next(error);
+  }
+}
+module.exports = { store, update };
