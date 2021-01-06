@@ -119,6 +119,7 @@ async function index(req, res, next) {
 //update PUT
 async function update(req, res, next) {
   try {
+    let policy = policyFor(req.user);
     if (!policy.can("Update", "Product")) {
       return res.json({
         error: 1,
@@ -213,6 +214,7 @@ async function update(req, res, next) {
 //destroy delete
 async function destroy(req, res, next) {
   try {
+    let policy = policyFor(req.user);
     if (!policy.can("delete", "Product")) {
       return res.json({
         error: 1,
