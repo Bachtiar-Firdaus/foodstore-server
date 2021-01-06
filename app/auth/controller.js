@@ -4,6 +4,16 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const config = require("../config");
 
+function me(req, res, next) {
+  if (!req.user) {
+    return res.json({
+      error: 1,
+      message: `Your're not login or token expired`,
+    });
+  }
+  return res.json(req.user);
+}
+
 async function register(req, res, next) {
   try {
     const payload = req.body;
@@ -56,4 +66,5 @@ async function login(req, res, next) {
     });
   })(req, res, next);
 }
-module.exports = { register, localStrategy, login };
+
+module.exports = { register, localStrategy, login, me };
