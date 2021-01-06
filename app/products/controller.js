@@ -6,9 +6,19 @@ const Category = require("../categories/model");
 const Tag = require("../tag/model");
 const config = require("../config");
 
+const { policyFor } = require("../policy");
+
 //add
 async function store(req, res, next) {
   try {
+    let policy = policyFor(req.user);
+    if (!policy.can("create", "Product")) {
+      return res.json({
+        error: 1,
+        message: `Anda tidak memiliki akses untuk membuat produk`,
+      });
+    }
+
     let payload = req.body;
 
     //relational collection one to one
@@ -109,6 +119,12 @@ async function index(req, res, next) {
 //update PUT
 async function update(req, res, next) {
   try {
+    if (!policy.can("Update", "Product")) {
+      return res.json({
+        error: 1,
+        message: `Anda tidak memiliki akses untuk mengupdate produk`,
+      });
+    }
     let payload = req.body;
 
     //relational collection one to one
@@ -197,6 +213,13 @@ async function update(req, res, next) {
 //destroy delete
 async function destroy(req, res, next) {
   try {
+    if (!policy.can("delete", "Product")) {
+      return res.json({
+        error: 1,
+        message: `Anda tidak memiliki akses untuk menghapus produk`,
+      });
+    }
+
     let product = await Product.findOneAndDelete({ _id: req.params.id });
 
     let currentImage = `${config.rootPath}/public/upload/${product.image_url}`;
