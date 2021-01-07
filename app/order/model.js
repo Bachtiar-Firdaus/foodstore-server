@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { model, Schema } = mongoose.set("useCreateIndex", true);
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const orderSchema = Schema(
   {
@@ -27,5 +28,7 @@ const orderSchema = Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.plugin(AutoIncrement, { inc_field: "order_number" });
 
 module.exports = model("Order", orderSchema);
