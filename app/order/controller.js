@@ -70,4 +70,40 @@ async function store(req, res, next) {
   }
 }
 
-module.exports = { store };
+async function index(req, res, next) {
+  let policy = policyFor(req.user);
+
+  if (!policy.can("view", "Order")) {
+    return res.json({
+      error: 1,
+      message: `You're not allowed to perform this action`,
+    });
+  }
+
+  try {
+    let { limit = 10, skip = 0 } = req.query;
+
+    let count = await Order.find({ user: req.user._id }).countDocuments();
+
+    let orders = await Order.find({ user: req.user._id })
+      .limit(parseInt(limit))
+      .skip(parseInt(skip))
+      .populate("order_items")
+      .sort("-createdAt");
+
+    return res.json({
+      data: orders.map((order) => order.toJSON({ virtuals: true })),
+      count,
+    });
+  } catch (error) {
+    if (error && error.name === "ValidationError") {
+      return res.json({
+        error: 1,
+        message: error.message,
+        fields: error.errors,
+      });
+    }
+    next(error);
+  }
+}
+module.exports = { store, index };
