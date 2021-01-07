@@ -9,7 +9,7 @@ const productScema = Schema(
       type: String,
       minlength: [3, "Panjang nama makanan minimal 3 karakter"],
       maxlength: [255, "Panjang nama makanan maxsimal 255 karakter"],
-      require: [true, "Nama produk harus diisi"],
+      required: [true, "Nama produk harus diisi"],
     },
     description: {
       type: String,

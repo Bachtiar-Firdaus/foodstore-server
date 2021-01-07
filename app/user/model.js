@@ -9,7 +9,7 @@ let userSchema = Schema(
   {
     full_name: {
       type: String,
-      require: [true, "Nama Harus di isi"],
+      required: [true, "Nama Harus di isi"],
       minlength: [3, "panjang karakter nama minimal 3"],
       maxlength: [255, "panjang karakter nama maxsimal 255"],
     },
@@ -18,12 +18,12 @@ let userSchema = Schema(
     },
     email: {
       type: String,
-      require: [true, "email wajib di isi"],
+      required: [true, "email wajib di isi"],
       maxlength: [255, "panjang karakter email minimal 255"],
     },
     password: {
       type: String,
-      require: [true, "password wajib di isi"],
+      required: [true, "password wajib di isi"],
       maxlength: [255, "panjang karakter Password minimal 255"],
     },
     role: {

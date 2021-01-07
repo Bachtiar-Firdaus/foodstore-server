@@ -6,7 +6,7 @@ const tagSchema = Schema({
     type: String,
     minlength: [3, "Panjang nama kategori minimal 3 karakter"],
     maxlength: [20, "Panjang maksimal kategori maxsimal 20 karakter"],
-    require: [true, "Nama Kategori wajib di isi"],
+    required: [true, "Nama Kategori wajib di isi"],
   },
 });
 

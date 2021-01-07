@@ -5,11 +5,11 @@ const cartItemSchema = Schema({
   name: {
     type: String,
     minlength: [5, "panjang nama makanan minimal 5 karakter"],
-    require: [true, "name harus di isi"],
+    required: [true, "name harus di isi"],
   },
   qty: {
     type: Number,
-    require: [true, "qty harus di isi"],
+    required: [true, "qty harus di isi"],
     min: [1, "minimal qty adalah 1"],
   },
   price: {
