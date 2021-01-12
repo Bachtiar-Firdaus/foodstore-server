@@ -58,9 +58,7 @@ async function getDesa(req, res, next) {
     let { kode_induk } = req.query;
     const data = await csv().fromFile(db_desa);
     if (!kode_induk) return res.json(data);
-    return res.json(
-      data.filter((data) => deserialize.kode_kabupaten === kode_induk)
-    );
+    return res.json(data.filter((desa) => desa.kode_kecamatan === kode_induk));
   } catch (error) {
     return res.json({
       error: 1,
